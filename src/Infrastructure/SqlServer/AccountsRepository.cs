@@ -21,8 +21,7 @@ public sealed class AccountsRepository : IAccountsRespository
         {
             return null;
         }
+
         return new Account(new AccountId(matching.AccountEntityID.ToString()), new FirstName(matching.FirstName), new LastName(matching.LastName));
-
-
     }
 }

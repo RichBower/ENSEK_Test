@@ -1,7 +1,5 @@
 ﻿using interview.test.ensek.Core.Domain.Loader;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace interview.test.ensek.Infrastructure.SqlServer;
 
@@ -20,6 +18,5 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<AccountEntity>().ToTable("Account");
         modelBuilder.Entity<MeterReadingEntity>().ToTable("MeterReading");
-
     }
 }

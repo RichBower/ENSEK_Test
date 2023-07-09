@@ -1,7 +1,4 @@
-﻿using System.Text;
-using interview.test.ensek.Core.Domain.Common;
-
-namespace interview.test.ensek.Tests.UseCases.Feeds;
+﻿namespace interview.test.ensek.Tests.UseCases.Feeds;
 
 public abstract class AccountsFeedBase
 {
@@ -42,6 +39,4 @@ public abstract class AccountsFeedBase
             }
         }
     }
-
-
 }

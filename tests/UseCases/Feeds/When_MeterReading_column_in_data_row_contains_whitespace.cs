@@ -29,35 +29,35 @@ public sealed class MeterReadingContainsWhitespaceTests : MeterReadingsFeedBase
                 ProcessedRecord<MeterReading>.WithFailure(3, FeedException.MeterReadingValueCannotBeNull())
             }
        };
-        //yield return new object[]
-        //{
-        //    @"
-        //       AccountId,MeterReadingDateTime,MeterReadValue,
-        //       2344,22/04/2019 09:24,     ,
+        yield return new object[]
+        {
+            @"
+               AccountId,MeterReadingDateTime,MeterReadValue,
+               2344,22/04/2019 09:24,     ,
 
 
-        //       ,22/04/2019 12:25,VOID,
-        //    ",
-        //     new List<ProcessedRecord<MeterReading>> {
-        //        ProcessedRecord<MeterReading>.WithFailure(3, FeedException.MeterReadingValueCannotBeNull()),
-        //        ProcessedRecord<MeterReading>.WithFailure(6, FeedException.AccountIdCannotBeNull())
+               ,22/04/2019 12:25,VOID,
+            ",
+             new List<ProcessedRecord<MeterReading>> {
+                ProcessedRecord<MeterReading>.WithFailure(3, FeedException.MeterReadingValueCannotBeNull()),
+                ProcessedRecord<MeterReading>.WithFailure(6, FeedException.AccountIdCannotBeNull())
 
-        //    }
-        //};
-        //yield return new object[]
-        // {
-        //    @"
-        //       AccountId,MeterReadingDateTime,MeterReadValue,
-        //       2344,22/04/2019 09:24,,
+            }
+        };
+        yield return new object[]
+         {
+            @"
+               AccountId,MeterReadingDateTime,MeterReadValue,
+               2344,22/04/2019 09:24,,
 
 
-        //       ,22/04/2019 12:25,VOID,
-        //        ,  ,     ,",
-        //    new List<ProcessedRecord<MeterReading>> {
-        //        ProcessedRecord<MeterReading>.WithFailure(3, FeedException.MeterReadingValueCannotBeNull()),
-        //        ProcessedRecord<MeterReading>.WithFailure(6, FeedException.AccountIdCannotBeNull()),
-        //        ProcessedRecord<MeterReading>.WithFailure(7, FeedException.AccountIdCannotBeNull()),
-        //    }
-        // };
+               ,22/04/2019 12:25,VOID,
+                ,  ,     ,",
+            new List<ProcessedRecord<MeterReading>> {
+                ProcessedRecord<MeterReading>.WithFailure(3, FeedException.MeterReadingValueCannotBeNull()),
+                ProcessedRecord<MeterReading>.WithFailure(6, FeedException.AccountIdCannotBeNull()),
+                ProcessedRecord<MeterReading>.WithFailure(7, FeedException.AccountIdCannotBeNull()),
+            }
+         };
     }
 }

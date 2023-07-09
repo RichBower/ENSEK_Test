@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using interview.test.ensek.Core.Domain.Common;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace interview.test.ensek.Core.Domain.Loader;
 

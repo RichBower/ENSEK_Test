@@ -18,7 +18,6 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
 
     public readonly Dictionary<int, MeterReading> _currentBatch = new Dictionary<int, MeterReading>();
 
-
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         await _meterReadingsRepository.SaveBatchAsync(_currentBatch.Values, cancellationToken);

@@ -30,44 +30,44 @@ public sealed class MeterReadingHeaderAndDataTests : MeterReadingsFeedBase
             }
             };
 
-//        yield return new object[]
-//            {
-//            @"
-//               AccountId,MeterReadingDateTime,MeterReadValue,
+        yield return new object[]
+            {
+            @"
+               AccountId,MeterReadingDateTime,MeterReadValue,
                
 
-//                2344,22/04/2019 09:24,1002,
-//               2233,22/04/2019 12:25,323,
+                2344,22/04/2019 09:24,1002,
+               2233,22/04/2019 12:25,323,
 
 
-//            ",
-//            new List<ProcessedRecord<MeterReading>> {
-//                ProcessedRecord<MeterReading>.WithSuccess(3, new MeterReading(new AccountId("2344"), new MeterReadingDateTime("22/04/2019 09:24"), new MeterReadValue( "1002"))),
-//                ProcessedRecord<MeterReading>.WithSuccess(4, new MeterReading(new AccountId("2233"), new MeterReadingDateTime("22/04/2019 12:25"), new MeterReadValue( "323")))
-//            }
-//            };
-//        yield return new object[]
-//            {
-//            @"
-//               AccountId,MeterReadingDateTime,MeterReadValue,
+            ",
+            new List<ProcessedRecord<MeterReading>> {
+                ProcessedRecord<MeterReading>.WithSuccess(5, new MeterReading(new AccountId("2344"), new MeterReadingDateTime("22/04/2019 09:24"), new MeterReadValue( "1002"))),
+                ProcessedRecord<MeterReading>.WithSuccess(6, new MeterReading(new AccountId("2233"), new MeterReadingDateTime("22/04/2019 12:25"), new MeterReadValue( "323")))
+            }
+            };
+        yield return new object[]
+            {
+                    @"
+                       AccountId,MeterReadingDateTime,MeterReadValue,
 
-//                2344,22/04/2019 09:24,1002,
-//               2233,22/04/2019 12:25,323,
+                        2344,22/04/2019 09:24,1002,
+                       2233,22/04/2019 12:25,323,
 
-//234422/04/2019 09:24
+        234422/04/2019 09:24
 
 
-//              t
+                      t
 
-//            1248,26/05/2019 09:24,3467,",
-//            new List<ProcessedRecord<MeterReading>> {
-//                ProcessedRecord<MeterReading>.WithSuccess(2, new MeterReading(new AccountId("2344"), new MeterReadingDateTime("22/04/2019 09:24"), new MeterReadValue( "1002"))),
-//                ProcessedRecord<MeterReading>.WithSuccess(3, new MeterReading(new AccountId("2233"), new MeterReadingDateTime("22/04/2019 12:25"), new MeterReadValue( "323"))),
-//                ProcessedRecord<MeterReading>.WithFailure(5, FeedException.MeterReadingDateTimeCannotBeNull()),
-//                ProcessedRecord<MeterReading>.WithFailure(8, FeedException.MeterReadingValueCannotBeNull()),
-//                ProcessedRecord<MeterReading>.WithSuccess(10, new MeterReading(new AccountId("1248"), new MeterReadingDateTime("26/05/2019 09:24"), new MeterReadValue( "3467")))
-//            }
-//            };
+                    1248,26/05/2019 09:24,3467,",
+                    new List<ProcessedRecord<MeterReading>> {
+                        ProcessedRecord<MeterReading>.WithSuccess(4, new MeterReading(new AccountId("2344"), new MeterReadingDateTime("22/04/2019 09:24"), new MeterReadValue( "1002"))),
+                        ProcessedRecord<MeterReading>.WithSuccess(5, new MeterReading(new AccountId("2233"), new MeterReadingDateTime("22/04/2019 12:25"), new MeterReadValue( "323"))),
+                        ProcessedRecord<MeterReading>.WithFailure(7, FeedException.InsufficientFields()),
+                        ProcessedRecord<MeterReading>.WithFailure(10, FeedException.InsufficientFields()),
+                        ProcessedRecord<MeterReading>.WithSuccess(12, new MeterReading(new AccountId("1248"), new MeterReadingDateTime("26/05/2019 09:24"), new MeterReadValue( "3467")))
+                    }
+            };
     }
 }
 
