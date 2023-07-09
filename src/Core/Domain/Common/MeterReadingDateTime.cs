@@ -5,7 +5,7 @@ namespace interview.test.ensek.Core.Domain.Common;
 
 public sealed class MeterReadingDateTime : ValueObject
 {
-    public const string DateTimeFormat = "dd/MM/yyyy hh:mm";
+    public const string DateTimeFormat = "dd/MM/yyyy HH:mm";
 
     public MeterReadingDateTime(string? value)
     {

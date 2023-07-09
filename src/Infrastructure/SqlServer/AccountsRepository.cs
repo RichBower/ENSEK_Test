@@ -15,7 +15,6 @@ public sealed class AccountsRepository : IAccountsRespository
 
     public async Task<Account?> GetAccountAsync(AccountId accountId, CancellationToken cancellation)
     {
-
         var matching = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountEntityID == accountId.Value);
 
         if (matching is null)

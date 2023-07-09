@@ -16,7 +16,7 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         _meterReadingsRepository = meterReadingsRepository;
     }
 
-    readonly Dictionary<int, MeterReading> _currentBatch = new Dictionary<int, MeterReading>();
+    public readonly Dictionary<int, MeterReading> _currentBatch = new Dictionary<int, MeterReading>();
 
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
@@ -44,7 +44,8 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
             return AddToBatchResult.WithFailure(BatchException.MeterReadingIsOld(source.AccountId, source.MeterReadingDateTime));
         }
 
-        _currentBatch.Add(source.AccountId.Value, source);
+        // Replace the current value
+        _currentBatch[source.AccountId.Value] = source;
 
         return AddToBatchResult.WithSuccess();
     }

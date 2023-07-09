@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace interview.test.ensek.Infrastructure.SqlServer;
 
-public sealed class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         :base(options)
