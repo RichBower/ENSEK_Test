@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Core\Service.Abstractions\interview.test.ensek.Core.Service.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Core\Services\interview.test.ensek.Core.Services.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\Services\interview.test.ensek.Infrastructure.Services.csproj" />

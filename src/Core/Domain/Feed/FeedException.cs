@@ -25,6 +25,9 @@ namespace interview.test.ensek.Core.Domain.Feed
         {
         }
 
+        public static FeedException AccountIdIsNotAnInteger(string value) => new FeedException($"Account Id {value} not in expected format NNNNN");
+
+
         public static FeedException InsufficientFields() => new FeedException($"Insufficient fields");
 
         public static FeedException AccountIdCannotBeNull() => new FeedException($"AccountId cannot be null");
@@ -39,7 +42,7 @@ namespace interview.test.ensek.Core.Domain.Feed
 
         public static FeedException MeterReadingDateTimeFormatIsInvalid(string value, string expectedFormat) => new FeedException($"MeterReadingDateTime {value} not in expected format {expectedFormat}");
 
-        public static FeedException MeterReadingValueIsInvalid(string value) => new FeedException($"MeterReadingDateTime {value} not in expected format NNNNN");
+        public static FeedException MeterReadingIsNotnExpectedFormat(string value) => new FeedException($"MeterReadingDateTime {value} not in expected format NNNNN");
 
         public static FeedException MeterReadingValueIsNotInRange(int value, int min, int max) => new FeedException($"MeterReadValue value {value} must be between {min} and {max}");
     }

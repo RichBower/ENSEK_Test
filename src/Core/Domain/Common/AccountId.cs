@@ -11,10 +11,15 @@ public sealed class AccountId : ValueObject
             throw FeedException.AccountIdCannotBeNull();
         }
 
-        Value = value;
+        if (false == int.TryParse(value, out var number))
+        {
+            throw FeedException.AccountIdIsNotAnInteger(value);
+        }
+
+        Value = number;
     }
 
-    public string Value { get; init; }
+    public int Value { get; init; }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

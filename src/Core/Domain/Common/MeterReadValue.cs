@@ -16,7 +16,7 @@ public sealed class MeterReadValue : ValueObject
 
         if (false == int.TryParse(value, out var number))
         {
-            throw FeedException.MeterReadingValueIsInvalid(value);
+            throw FeedException.MeterReadingIsNotnExpectedFormat(value);
         }
 
         if (number < MinValue || number > MaxValue)

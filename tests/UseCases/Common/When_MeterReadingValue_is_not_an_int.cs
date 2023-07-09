@@ -1,20 +1,23 @@
 ﻿using interview.test.ensek.Core.Domain.Common;
 
-public sealed class MeterReadingValueFormatTests
+namespace interview.test.ensek.Tests.UseCases.Common
 {
-    [Theory]
-    [InlineData("1x")]
-    [InlineData("x1")]
-    [InlineData("1234x")]
-    [InlineData("1x23x4")]
-    public void When_MeterReadingValue_is_not_an_int(string input)
+    public sealed class MeterReadingValueFormatTests
     {
-        var act = () => new MeterReadValue(input);
+        [Theory]
+        [InlineData("1x")]
+        [InlineData("x1")]
+        [InlineData("1234x")]
+        [InlineData("1x23x4")]
+        public void When_MeterReadingValue_is_not_an_int(string input)
+        {
+            var act = () => new MeterReadValue(input);
 
-        var expectedException = FeedException.MeterReadingValueIsInvalid(input);
+            var expectedException = FeedException.MeterReadingIsNotnExpectedFormat(input);
 
-        act.Should()
-            .Throw<FeedException>()
-            .WithMessage(expectedException.Message);
+            act.Should()
+                .Throw<FeedException>()
+                .WithMessage(expectedException.Message);
+        }
     }
 }

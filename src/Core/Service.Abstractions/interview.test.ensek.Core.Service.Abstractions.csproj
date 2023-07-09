@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\interview.test.ensek.Core.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
