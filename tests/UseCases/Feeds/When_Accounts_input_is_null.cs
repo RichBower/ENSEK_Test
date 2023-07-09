@@ -1,4 +1,6 @@
-﻿namespace interview.test.ensek.Tests.UseCases.Feeds;
+﻿using interview.test.ensek.Core.Domain.Common;
+
+namespace interview.test.ensek.Tests.UseCases.Feeds;
 public sealed class AccountsFeedInputIsNullTests : AccountsFeedBase
 {
     public AccountsFeedInputIsNullTests() : base()
@@ -7,7 +9,7 @@ public sealed class AccountsFeedInputIsNullTests : AccountsFeedBase
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void When_input_is_null(string input, List<List<string>> expected)
+    public void When_input_is_null(string input, List<ProcessedRecord<Account>> expected)
     {
         Runner(input, expected);
     }
@@ -17,12 +19,12 @@ public sealed class AccountsFeedInputIsNullTests : AccountsFeedBase
         yield return new object[]
         {
             string.Empty,
-             new List<List<string>>()
+             new List<ProcessedRecord<Account>>()
         };
         yield return new object[]
         {
            null,
-             new List<List<string>>()
+             new List<ProcessedRecord<Account>>()
         };
     }
 }

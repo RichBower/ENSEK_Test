@@ -1,6 +1,8 @@
-﻿namespace interview.test.ensek.Core.Domain.Feed;
+﻿using interview.test.ensek.Core.Domain.Common;
+
+namespace interview.test.ensek.Core.Domain.Feed;
 
 public interface IAccountsFeedParserService
 {
-    IEnumerable<AccountRecord> Read(Stream source);
+    IEnumerable<ProcessedRecord<Account>> Read(Stream source);
 }

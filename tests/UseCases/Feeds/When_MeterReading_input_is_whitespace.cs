@@ -1,4 +1,6 @@
 ﻿
+using interview.test.ensek.Core.Domain.Common;
+
 namespace interview.test.ensek.Tests.UseCases.Feeds;
 
 public sealed partial class MeterReadingInputIsWhitespaceTests : MeterReadingsFeedBase
@@ -10,7 +12,7 @@ public sealed partial class MeterReadingInputIsWhitespaceTests : MeterReadingsFe
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void When_input_is_whitelines(string input, List<List<string>> expected)
+    public void When_input_is_whitelines(string input, List<ProcessedRecord<MeterReading>> expected)
     {
         Runner(input, expected);
     }
@@ -23,17 +25,19 @@ public sealed partial class MeterReadingInputIsWhitespaceTests : MeterReadingsFe
             
 
             ",
-             new List<List<string>>()
+             new List<ProcessedRecord<MeterReading>>()
         };
         yield return new object[]
         {
             @" ",
-            new List<List<string>>()
+                       new List<ProcessedRecord<MeterReading>>()
+
         };
         yield return new object[]
        {
             @"",
-            new List<List<string>>()
+                      new List<ProcessedRecord<MeterReading>>()
+
        };
     }
 }

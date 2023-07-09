@@ -1,4 +1,6 @@
-﻿namespace interview.test.ensek.Tests.UseCases.Feeds;
+﻿using interview.test.ensek.Core.Domain.Common;
+
+namespace interview.test.ensek.Tests.UseCases.Feeds;
 
 public sealed partial class AccountsFeedIsWhitespaceTests : AccountsFeedBase
 {
@@ -9,7 +11,7 @@ public sealed partial class AccountsFeedIsWhitespaceTests : AccountsFeedBase
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void When_input_is_whitelines(string input, List<List<string>> expected)
+    public void When_input_is_whitelines(string input, List<ProcessedRecord<Account>> expected)
     {
         Runner(input, expected);
     }
@@ -22,17 +24,17 @@ public sealed partial class AccountsFeedIsWhitespaceTests : AccountsFeedBase
             
 
             ",
-             new List<List<string>>()
+             new List<ProcessedRecord<Account>>()
         };
         yield return new object[]
         {
             @" ",
-            new List<List<string>>()
+            new List<ProcessedRecord<Account>>()
         };
         yield return new object[]
        {
             @"",
-            new List<List<string>>()
+            new List<ProcessedRecord<Account>>()
        };
     }
 }

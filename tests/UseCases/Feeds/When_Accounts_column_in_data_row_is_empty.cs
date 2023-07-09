@@ -1,4 +1,6 @@
-﻿namespace interview.test.ensek.Tests.UseCases.Feeds;
+﻿using interview.test.ensek.Core.Domain.Common;
+
+namespace interview.test.ensek.Tests.UseCases.Feeds;
 public sealed class AccountsFeedColumnIsEmptyTests : AccountsFeedBase
 {
 
@@ -8,7 +10,7 @@ public sealed class AccountsFeedColumnIsEmptyTests : AccountsFeedBase
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void When_column_in_data_row_is_empty(string input, List<List<string>> expected)
+    public void When_column_in_data_row_is_empty(string input, List<ProcessedRecord<Account>> expected)
     {
         Runner(input, expected);
     }
@@ -21,8 +23,8 @@ public sealed class AccountsFeedColumnIsEmptyTests : AccountsFeedBase
                AccountId,FirstName,LastName
                2344,Tommy,
             ",
-            new List<List<string>> {
-                new List<string> { "2344", "Tommy", string.Empty } 
+           new List<ProcessedRecord<Account>> {
+                ProcessedRecord<Account>.WithFailure(3, FeedException.LastNameCannotBeNull())
             }
         };
         yield return new object[]
@@ -33,9 +35,8 @@ public sealed class AccountsFeedColumnIsEmptyTests : AccountsFeedBase
 
               ,Tim,Test
             ",
-            new List<List<string>>
-            {
-                new List<string> { string.Empty, "Tim", "Test" }
+             new List<ProcessedRecord<Account>> {
+                ProcessedRecord<Account>.WithFailure(5, FeedException.AccountIdCannotBeNull())
             }
         };
         yield return new object[]
@@ -51,12 +52,10 @@ public sealed class AccountsFeedColumnIsEmptyTests : AccountsFeedBase
 
 
             ",
-            new List<List<string>>
-            {
-                new List<string> { "2344", "Tommy", string.Empty },
-                new List<string> { string.Empty, string.Empty, string.Empty },
-                new List<string> { string.Empty, "Tim", "Test" }
-
+           new List<ProcessedRecord<Account>> {
+                ProcessedRecord<Account>.WithFailure(3, FeedException.LastNameCannotBeNull()),
+                ProcessedRecord<Account>.WithFailure(4, FeedException.AccountIdCannotBeNull()),
+                ProcessedRecord<Account>.WithFailure(8, FeedException.AccountIdCannotBeNull()),
             }
          };
     }

@@ -1,9 +1,10 @@
 ﻿using CsvHelper;
+using interview.test.ensek.Core.Domain.Common;
 using interview.test.ensek.Core.Domain.Feed;
 
 namespace interview.test.ensek.Infrastructure.Services;
 
-public sealed class CsvReaderAccountsFeedService : CsvReaderFeedServiceBase<AccountRecord>, IAccountsFeedParserService
+public sealed class CsvReaderAccountsFeedService : CsvReaderFeedServiceBase<Account>, IAccountsFeedParserService
 {
     const int RequiredColumnCount = 3;
 
@@ -13,14 +14,14 @@ public sealed class CsvReaderAccountsFeedService : CsvReaderFeedServiceBase<Acco
 
     }
 
-    protected override bool IsRowValid(CsvReader reader) => reader.Parser.Count >= RequiredColumnCount;
+    protected override bool DoesRowContainSufficientFields(CsvReader reader) =>  reader.Parser.Count >= RequiredColumnCount;
 
-    protected override AccountRecord Map(CsvReader reader)
+    protected override Account Map(CsvReader reader)
     {
-        var accountId = reader.GetField("AccountId") ?? string.Empty;
-        var firstName = reader.GetField("FirstName") ?? string.Empty;
-        var secondName = reader.GetField("SecondName") ?? string.Empty;
+        var accountId = new AccountId(reader.GetField("AccountId"));
+        var firstName = new FirstName(reader.GetField("FirstName"));
+        var lastName = new LastName(reader.GetField("LastName"));
 
-        return new AccountRecord(accountId, firstName, secondName);
+        return new Account(accountId, firstName, lastName);
     }
 }
