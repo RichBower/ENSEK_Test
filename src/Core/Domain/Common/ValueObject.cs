@@ -1,8 +1,10 @@
 ﻿namespace interview.test.ensek.Core.Domain.Common;
 
+/// <summary>
+/// Borrowed from Unit Testing book
+/// </summary>
 public abstract class ValueObject
 {
-
     protected abstract IEnumerable<object> GetEqualityComponents();
 
 #pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).

@@ -6,7 +6,7 @@ public sealed class AddToBatchResult
 {
     public bool IsSuccess { get; init; }
     
-    public BatchException? FailureReason { get; init; }
+    public BatchError? FailureReason { get; init; }
 
     private AddToBatchResult()
     {
@@ -17,13 +17,13 @@ public sealed class AddToBatchResult
         IsSuccess = isSuccess;
     }
 
-    private AddToBatchResult(BatchException ex)
+    private AddToBatchResult(BatchError ex)
         : this(false)
     {
         FailureReason = ex;
     }
 
-    public static AddToBatchResult WithFailure(BatchException ex) => new AddToBatchResult(ex);
+    public static AddToBatchResult WithFailure(BatchError ex) => new AddToBatchResult(ex);
 
     public static AddToBatchResult WithSuccess() => new AddToBatchResult(true);
 }

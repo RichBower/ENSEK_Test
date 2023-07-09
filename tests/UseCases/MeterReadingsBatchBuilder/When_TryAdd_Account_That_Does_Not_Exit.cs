@@ -27,7 +27,7 @@ namespace interview.test.ensek.Tests.UseCases.MeterReadingsBatchBuilder
             builderResult.Should().NotBeNull();
             builderResult.IsSuccess.Should().BeFalse();
             builderResult.FailureReason.Should().NotBeNull();
-            builderResult.FailureReason?.Message.Should().Be(BatchException.AccountIdDoesNotExist(account.AccountId).Message);
+            builderResult.FailureReason?.Message.Should().Be(BatchError.AccountIdDoesNotExist(account.AccountId).Message);
 
         }
 

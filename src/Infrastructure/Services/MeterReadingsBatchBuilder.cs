@@ -24,24 +24,32 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         await _meterReadingsRepository.SaveBatchAsync(_currentBatch.Values, cancellationToken);
     }
 
+    /// <summary>
+    /// The current solution seems to produce the correct results (25 good and 10 bad rows); 
+    /// however, not sure if the requirements are for additional files to be loaded, the same file reloaded.
+    /// TODO: Check against MeterReadings table as well as local cache.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<AddToBatchResult> TryAddAsync(MeterReading source, CancellationToken cancellationToken)
     {
         // Ensure the account exists
         if (await DoesTheAccountExist(source.AccountId, cancellationToken) == false)
         {
-            return AddToBatchResult.WithFailure(BatchException.AccountIdDoesNotExist(source.AccountId));
-        }
-
-        // Ensure the entry is not already part of this batch
-        if (DoesTheBatchAlreadyContainTheReading(source.AccountId, source.MeterReadValue) == true)
-        {
-            return AddToBatchResult.WithFailure(BatchException.MeterReadingAlreadyExists(source.AccountId, source.MeterReadingDateTime));
+            return AddToBatchResult.WithFailure(BatchError.AccountIdDoesNotExist(source.AccountId));
         }
 
         // Ensure the entry is newer than matching item in batch
         if (DoesTheBatchAlreadyContainANewerReading(source.AccountId, source.MeterReadingDateTime) == true)
         {
-            return AddToBatchResult.WithFailure(BatchException.MeterReadingIsOld(source.AccountId, source.MeterReadingDateTime));
+            return AddToBatchResult.WithFailure(BatchError.MeterReadingIsOld(source.AccountId, source.MeterReadingDateTime));
+        }
+
+        // Ensure the entry is not already part of this batch
+        if (DoesTheBatchAlreadyContainTheReading(source.AccountId, source.MeterReadValue) == true)
+        {
+            return AddToBatchResult.WithFailure(BatchError.MeterReadingAlreadyExists(source.AccountId, source.MeterReadingDateTime));
         }
 
         // Replace the current value

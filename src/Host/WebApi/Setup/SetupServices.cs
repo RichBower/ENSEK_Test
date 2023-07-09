@@ -23,10 +23,7 @@ public static class SetupServices
                 options.UseSqlServer(configuration.GetConnectionString("EnsekMeterReadingsContext")));
         }
 
-        //services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
         services.AddScoped<ApplicationDbContextInitialiser>();
-
 
         services.AddTransient<IAccountsRespository, AccountsRepository>();
         services.AddTransient<IMeterReadingsRepository, MeterReadingsRespository>();
