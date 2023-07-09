@@ -35,19 +35,20 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
     public async Task<AddToBatchResult> TryAddAsync(MeterReading source, CancellationToken cancellationToken)
     {
         // Ensure the account exists
-        if (await DoesTheAccountExist(source.AccountId, cancellationToken) == false)
+        if (await ShouldRecordBeIgnoredBecauseAccountIdIsInvalid(source.AccountId, cancellationToken) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.AccountIdDoesNotExist(source.AccountId));
         }
 
         // Ensure the entry is newer than matching item in batch
-        if (DoesTheBatchAlreadyContainANewerReading(source.AccountId, source.MeterReadingDateTime) == true)
+        if (ShouldRecordBeIgnoreBecauseItIsTooOld(source.AccountId, source.MeterReadingDateTime) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.MeterReadingIsOld(source.AccountId, source.MeterReadingDateTime));
         }
 
-        // Ensure the entry is not already part of this batch
-        if (DoesTheBatchAlreadyContainTheReading(source.AccountId, source.MeterReadValue) == true)
+        // Ensure the entry is not already part of this batch - an item is deemed to be a match if all fields match
+        // TODO: Not sure this is right.  The previous check will return if the record date is older than 
+        if (ShouldRecordBeIgnoredBecauseItIsADuplicate(source.AccountId, source.MeterReadingDateTime, source.MeterReadValue) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.MeterReadingAlreadyExists(source.AccountId, source.MeterReadingDateTime));
         }
@@ -58,7 +59,7 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         return AddToBatchResult.WithSuccess();
     }
 
-    private bool DoesTheBatchAlreadyContainANewerReading(AccountId accountId, MeterReadingDateTime meterReadingDateTime)
+    private bool ShouldRecordBeIgnoreBecauseItIsTooOld(AccountId accountId, MeterReadingDateTime meterReadingDateTime)
     {
         if(_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == false)
         {
@@ -68,26 +69,26 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         return (itemInBatch.MeterReadingDateTime.Value > meterReadingDateTime.Value);
     }
 
-    private bool DoesTheBatchAlreadyContainTheReading(AccountId accountId, MeterReadValue meterReadValue)
+    private bool ShouldRecordBeIgnoredBecauseItIsADuplicate(AccountId accountId, MeterReadingDateTime meterReadingDateTime, MeterReadValue meterReadValue)
     {
         if (_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == false)
         {
             return false;
         }
 
-        return (itemInBatch.MeterReadValue.Value != meterReadValue.Value);
+        return (itemInBatch.MeterReadValue.Value == meterReadValue.Value && itemInBatch.MeterReadingDateTime == meterReadingDateTime);
     }
 
-    private async Task<bool> DoesTheAccountExist(AccountId accountId, CancellationToken cancellationToken)
+    private async Task<bool> ShouldRecordBeIgnoredBecauseAccountIdIsInvalid(AccountId accountId, CancellationToken cancellationToken)
     {
         // Save a DB lookup
-        if (_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == true)
+        if (_currentBatch.TryGetValue(accountId.Value, out _) == true)
         {
-            return true;
+            return false;
         }
 
         var account = await _accountsRespository.GetAccountAsync(accountId, cancellationToken);
 
-        return !(account is null);
+        return (account is null);
     }
 }

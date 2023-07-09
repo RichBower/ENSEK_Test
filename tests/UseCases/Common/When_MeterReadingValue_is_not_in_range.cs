@@ -1,6 +1,4 @@
-﻿using interview.test.ensek.Core.Domain.Common;
-
-namespace interview.test.ensek.Tests.UseCases.Common;
+﻿namespace interview.test.ensek.Tests.UseCases.Common;
 
 public sealed class MeterReadingValueRangeTests
 {

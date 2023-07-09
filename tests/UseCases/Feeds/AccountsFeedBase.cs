@@ -27,6 +27,9 @@ public abstract class AccountsFeedBase
             var left = result.ElementAtOrDefault(rowIndex);
             var right = expected.ElementAtOrDefault(rowIndex);
 
+            left.Should().NotBeNull();
+            right.Should().NotBeNull();
+
             left.RowNumber.Should().Be(right.RowNumber);
             left.Result.Should().Be(right.Result);
             left.IsSuccess.Should().Be(right.IsSuccess);

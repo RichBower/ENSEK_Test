@@ -1,6 +1,4 @@
-﻿using interview.test.ensek.Core.Domain.Common;
-
-namespace interview.test.ensek.Tests.UseCases.Feeds;
+﻿namespace interview.test.ensek.Tests.UseCases.Feeds;
 
 public sealed class AccountsFeedContainsWhitespaceTests : AccountsFeedBase
 {

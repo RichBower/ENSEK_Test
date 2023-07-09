@@ -1,8 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model interview.test.ensek.Core.Contracts.ImportResultDto;
+
+@{
+    ViewData["Title"] = "ENSEK Test";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Meter Readings Uploader</h1>
+
+<hr />
+
+<div>
+    <form asp-route="Index" enctype="multipart/form-data" method="POST">
+        <input type="file" name="file" />
+        <button type="submit">Upload File</button>
+    </form>
 </div>
+@if (Model.successfulCount != 0 && Model.unsuccessfulCount != 0)
+{
+    <div class="alert" style="margin-top:20px">
+        Successful = @Model.successfulCount
+        Unsuccessful = @Model.unsuccessfulCount
+    </div>
+}
+
