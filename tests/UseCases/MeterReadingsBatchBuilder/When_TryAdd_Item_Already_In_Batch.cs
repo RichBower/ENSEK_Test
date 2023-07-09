@@ -11,6 +11,9 @@ namespace interview.test.ensek.Tests.UseCases.MeterReadingsBatchBuilder
             var meterReadingsRepositoryMock = new Mock<IMeterReadingsRepository>();
             var builder = new interview.test.ensek.Infrastructure.Services.MeterReadingsBatchBuilder(accountsRepositoryMock.Object, meterReadingsRepositoryMock.Object);
             accountsRepositoryMock.Setup(s => s.GetAccountAsync(It.IsAny<AccountId>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult<Account?>(BuilderTestsHelper.ValidAccount));
+            accountsRepositoryMock.Setup(s => s.DoesTheAccountExistAsync(It.IsAny<AccountId>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult<bool>(true));
+            meterReadingsRepositoryMock.Setup(s => s.IsMeterReadingUniqueAsync(It.IsAny<AccountId>(), It.IsAny<MeterReadingDateTime>(), It.IsAny<MeterReadValue>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult<bool>(true));
+
 
             var firstRecordShouldWork = await builder.TryAddAsync(BuilderTestsHelper.ValidMeterReading, CancellationToken.None);
             var secondShouldFail = await builder.TryAddAsync(BuilderTestsHelper.ValidMeterReading, CancellationToken.None);

@@ -12,10 +12,7 @@ public sealed class AddToBatchResult
     {
 
     }
-    private AddToBatchResult(bool isSuccess)
-    {
-        IsSuccess = isSuccess;
-    }
+    private AddToBatchResult(bool isSuccess) =>  IsSuccess = isSuccess;
 
     private AddToBatchResult(BatchError ex)
         : this(false)

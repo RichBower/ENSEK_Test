@@ -14,7 +14,7 @@
         <button type="submit">Upload File</button>
     </form>
 </div>
-@if (Model.successfulCount != 0 && Model.unsuccessfulCount != 0)
+@if (Model.successfulCount != 0 || Model.unsuccessfulCount != 0)
 {
     <div class="alert" style="margin-top:20px">
         Successful = @Model.successfulCount

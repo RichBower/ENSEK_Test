@@ -16,17 +16,24 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         _meterReadingsRepository = meterReadingsRepository;
     }
 
+    /// <summary>
+    /// A batch contains every record that should be inserted into the database.  
+    /// I prefer bulk inserting the data, assuming the files remain small, rather than 
+    /// individual inserts. Ideally the insert would be wrapped in a transaction, just 
+    /// to protect concurrency issues, but it's already after 12am.
+    /// </summary>
     public readonly Dictionary<int, MeterReading> _currentBatch = new Dictionary<int, MeterReading>();
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         await _meterReadingsRepository.SaveBatchAsync(_currentBatch.Values, cancellationToken);
+
+        _currentBatch.Clear();
     }
 
     /// <summary>
     /// The current solution seems to produce the correct results (25 good and 10 bad rows); 
     /// however, not sure if the requirements are for additional files to be loaded, the same file reloaded.
-    /// TODO: Check against MeterReadings table as well as local cache.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="cancellationToken"></param>
@@ -34,20 +41,20 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
     public async Task<AddToBatchResult> TryAddAsync(MeterReading source, CancellationToken cancellationToken)
     {
         // Ensure the account exists
-        if (await ShouldRecordBeIgnoredBecauseAccountIdIsInvalid(source.AccountId, cancellationToken) == true)
+        if (await ShouldRecordBeIgnoredBecauseAccountIdIsInvalidAsync(source.AccountId, cancellationToken) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.AccountIdDoesNotExist(source.AccountId));
         }
 
         // Ensure the entry is newer than matching item in batch
-        if (ShouldRecordBeIgnoreBecauseItIsTooOld(source.AccountId, source.MeterReadingDateTime) == true)
+        if (await ShouldRecordBeIgnoreBecauseItIsTooOldAsync(source.AccountId, source.MeterReadingDateTime, cancellationToken) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.MeterReadingIsOld(source.AccountId, source.MeterReadingDateTime));
         }
 
         // Ensure the entry is not already part of this batch - an item is deemed to be a match if all fields match
         // TODO: Not sure this is right.  The previous check will return if the record date is older than 
-        if (ShouldRecordBeIgnoredBecauseItIsADuplicate(source.AccountId, source.MeterReadingDateTime, source.MeterReadValue) == true)
+        if (await ShouldRecordBeIgnoredBecauseItIsADuplicateAsync(source.AccountId, source.MeterReadingDateTime, source.MeterReadValue, cancellationToken) == true)
         {
             return AddToBatchResult.WithFailure(BatchError.MeterReadingAlreadyExists(source.AccountId, source.MeterReadingDateTime));
         }
@@ -58,36 +65,14 @@ public sealed class MeterReadingsBatchBuilder : IMeterReadingBatchBuilder
         return AddToBatchResult.WithSuccess();
     }
 
-    private bool ShouldRecordBeIgnoreBecauseItIsTooOld(AccountId accountId, MeterReadingDateTime meterReadingDateTime)
-    {
-        if(_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == false)
-        {
-            return false;
-        }
+    private async Task<bool> ShouldRecordBeIgnoreBecauseItIsTooOldAsync(AccountId accountId, MeterReadingDateTime meterReadingDateTime, CancellationToken cancellationToken) =>
+        (_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == true && itemInBatch.MeterReadingDateTime.Value > meterReadingDateTime.Value) ||
+            await _meterReadingsRepository.DoesNewerReadingExistAsync(accountId, meterReadingDateTime, cancellationToken) == true;
 
-        return (itemInBatch.MeterReadingDateTime.Value > meterReadingDateTime.Value);
-    }
+    private async Task<bool> ShouldRecordBeIgnoredBecauseItIsADuplicateAsync(AccountId accountId, MeterReadingDateTime meterReadingDateTime, MeterReadValue meterReadValue, CancellationToken cancellationToken) =>
+        ((_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == true && itemInBatch.MeterReadValue.Value == meterReadValue.Value && itemInBatch.MeterReadingDateTime == meterReadingDateTime) ||
+            await _meterReadingsRepository.IsMeterReadingUniqueAsync(accountId, meterReadingDateTime, meterReadValue, cancellationToken) == false);
 
-    private bool ShouldRecordBeIgnoredBecauseItIsADuplicate(AccountId accountId, MeterReadingDateTime meterReadingDateTime, MeterReadValue meterReadValue)
-    {
-        if (_currentBatch.TryGetValue(accountId.Value, out var itemInBatch) == false)
-        {
-            return false;
-        }
-
-        return (itemInBatch.MeterReadValue.Value == meterReadValue.Value && itemInBatch.MeterReadingDateTime == meterReadingDateTime);
-    }
-
-    private async Task<bool> ShouldRecordBeIgnoredBecauseAccountIdIsInvalid(AccountId accountId, CancellationToken cancellationToken)
-    {
-        // Save a DB lookup
-        if (_currentBatch.TryGetValue(accountId.Value, out _) == true)
-        {
-            return false;
-        }
-
-        var account = await _accountsRespository.GetAccountAsync(accountId, cancellationToken);
-
-        return (account is null);
-    }
+    private async Task<bool> ShouldRecordBeIgnoredBecauseAccountIdIsInvalidAsync(AccountId accountId, CancellationToken cancellationToken) =>
+        _currentBatch.TryGetValue(accountId.Value, out _) == false && (await _accountsRespository.DoesTheAccountExistAsync(accountId, cancellationToken) == false);
 }

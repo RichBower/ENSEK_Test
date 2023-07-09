@@ -13,9 +13,12 @@ public sealed class AccountsRepository : IAccountsRespository
 
     private ApplicationDbContext _context { get; init; }
 
-    public async Task<Account?> GetAccountAsync(AccountId accountId, CancellationToken cancellation)
+    public async Task<bool> DoesTheAccountExistAsync(AccountId accountId, CancellationToken cancellationToken) =>
+        await _context.Accounts.AnyAsync(a => a.AccountEntityID == accountId.Value, cancellationToken);
+
+    public async Task<Account?> GetAccountAsync(AccountId accountId, CancellationToken cancellationToken)
     {
-        var matching = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountEntityID == accountId.Value);
+        var matching = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountEntityID == accountId.Value, cancellationToken);
 
         if (matching is null)
         {

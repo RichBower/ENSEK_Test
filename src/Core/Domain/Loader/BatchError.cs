@@ -6,10 +6,7 @@ namespace interview.test.ensek.Core.Domain.Loader
     {
         public string Message { get; init; }
 
-        public BatchError(string message) 
-        {
-            Message = message;
-        }
+        public BatchError(string message) => Message = message;
 
         public static BatchError AccountIdDoesNotExist(AccountId accountId) => new BatchError($"AccountId {accountId.Value} does not exist");
 

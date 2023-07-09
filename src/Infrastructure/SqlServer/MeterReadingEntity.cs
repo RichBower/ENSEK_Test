@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace interview.test.ensek.Core.Domain.Loader;
+﻿namespace interview.test.ensek.Core.Domain.Loader;
 
 public sealed class MeterReadingEntity
 {

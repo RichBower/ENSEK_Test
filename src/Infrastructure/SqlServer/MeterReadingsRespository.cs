@@ -1,5 +1,7 @@
-﻿using interview.test.ensek.Core.Domain.Common;
+﻿using System.Threading;
+using interview.test.ensek.Core.Domain.Common;
 using interview.test.ensek.Core.Domain.Loader;
+using Microsoft.EntityFrameworkCore;
 
 namespace interview.test.ensek.Infrastructure.SqlServer;
 
@@ -12,6 +14,12 @@ public sealed class MeterReadingsRespository : IMeterReadingsRepository
     }
 
     private ApplicationDbContext _context { get; init; }
+
+    public async Task<bool> DoesNewerReadingExistAsync(AccountId accountId, MeterReadingDateTime meterReadingDateTime, CancellationToken cancellationToken) =>
+        await _context.MeterReadings.AnyAsync(mr => mr.AccountEntityID == accountId.Value && mr.MeterReadingDateTime > meterReadingDateTime.Value, cancellationToken) ;
+
+    public async Task<bool> IsMeterReadingUniqueAsync(AccountId accountId, MeterReadingDateTime meterReadingDateTime, MeterReadValue meterReadValue, CancellationToken cancellationToken) =>
+        await _context.MeterReadings.AnyAsync(mr => mr.AccountEntityID == accountId.Value && mr.MeterReadingDateTime == meterReadingDateTime.Value && mr.MeterReadValue == meterReadValue.Value, cancellationToken) == false;
 
     public async Task<int> SaveBatchAsync(IReadOnlyCollection<MeterReading> meterReadings, CancellationToken cancellationToken)
     {
